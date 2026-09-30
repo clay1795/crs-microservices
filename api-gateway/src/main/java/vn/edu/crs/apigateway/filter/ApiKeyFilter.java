@@ -21,7 +21,7 @@ public class ApiKeyFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
 
-        if (!path.startsWith("/api/public/courses")) {
+        if (!path.equals("/api/public/courses")) {
             return chain.filter(exchange);
         }
 

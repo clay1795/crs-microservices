@@ -24,15 +24,17 @@ public class AuthHeaderFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
-        boolean isOpen = OPEN_PATHS.stream().anyMatch(path::startsWith);
-        boolean isPublicCourseRead = path.startsWith("/api/courses")
+        boolean isOpen = OPEN_PATHS.contains(path);
+        boolean isPublicCourseRead = (path.equals("/api/courses") || path.startsWith("/api/courses/"))
                 && HttpMethod.GET.equals(request.getMethod());
 
         if (isOpen || isPublicCourseRead) {
             return chain.filter(exchange);
         }
 
-        if (request.getHeaders().getFirst("Authorization") == null) {
+        String authorization = request.getHeaders().getFirst("Authorization");
+        if (authorization == null || !authorization.startsWith("Bearer ")
+                || authorization.substring(7).isBlank()) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
