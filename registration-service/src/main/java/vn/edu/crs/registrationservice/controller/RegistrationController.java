@@ -3,6 +3,10 @@ package vn.edu.crs.registrationservice.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.server.ResponseStatusException;
+import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,12 +27,27 @@ public class RegistrationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Registration register(@Valid @RequestBody RegistrationRequestDTO dto) {
+    public Registration register(@Valid @RequestBody RegistrationRequestDTO dto, Authentication authentication) {
+        Long studentId = (Long) authentication.getCredentials();
+        if (!studentId.equals(dto.getStudentId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Khong duoc dang ky cho sinh vien khac");
+        }
         return registrationService.register(dto);
     }
 
+    @GetMapping("/my")
+    public List<Registration> getMyRegistrations(Authentication authentication) {
+        return registrationService.getMyRegistrations((Long) authentication.getCredentials());
+    }
+
     @DeleteMapping("/{id}")
-    public void cancel(@PathVariable Long id) {
+    public void cancel(@PathVariable Long id, Authentication authentication) {
+        Long studentId = (Long) authentication.getCredentials();
+        boolean isOwner = registrationService.getMyRegistrations(studentId).stream()
+                .anyMatch(registration -> registration.getId().equals(id));
+        if (!isOwner) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Khong duoc huy dang ky cua sinh vien khac");
+        }
         registrationService.cancel(id);
     }
 }
