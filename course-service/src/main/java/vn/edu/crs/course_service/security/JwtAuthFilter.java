@@ -40,10 +40,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         .parseSignedClaims(authHeader.substring(7)).getPayload();
                 String username = claims.getSubject();
                 String role = claims.get("role", String.class);
+                Long userId = claims.get("userId", Long.class);
 
                 if (username != null && role != null) {
                     var authentication = new UsernamePasswordAuthenticationToken(
-                            username, null,
+                            username, userId,
                             List.of(new SimpleGrantedAuthority("ROLE_" + role)));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
