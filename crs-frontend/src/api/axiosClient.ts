@@ -9,7 +9,9 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('crs_token')
-  if (token) config.headers.Authorization = `Bearer ${token}`
+  const isPublicCourseRead = config.method === 'get'
+    && (config.url === '/api/courses' || config.url?.startsWith('/api/courses/'))
+  if (token && !isPublicCourseRead) config.headers.Authorization = `Bearer ${token}`
   return config
 })
 
