@@ -22,6 +22,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint((request, response, error) -> response.setStatus(401))
+                        .accessDeniedHandler((request, response, error) -> response.setStatus(403)))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/internal/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/courses/**").permitAll()

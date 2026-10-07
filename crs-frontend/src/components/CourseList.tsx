@@ -6,9 +6,9 @@ interface CourseListProps {
   state: LoadState
   errorMessage: string
   onRetry: () => void
-  onEdit: (course: Course) => void
-  onDelete: (course: Course) => void
-  busy: boolean
+  onEdit?: (course: Course) => void
+  onDelete?: (course: Course) => void
+  busy?: boolean
 }
 
 export default function CourseList({
@@ -18,7 +18,7 @@ export default function CourseList({
   onRetry,
   onEdit,
   onDelete,
-  busy,
+  busy = false,
 }: CourseListProps) {
   if (state === 'loading') {
     return <p className="status">Đang tải danh sách môn học...</p>
@@ -39,6 +39,8 @@ export default function CourseList({
     return <p className="status">Không tìm thấy môn học nào phù hợp.</p>
   }
 
+  const showActions = !!onEdit || !!onDelete
+
   return (
     <div className="table-wrapper">
       <table>
@@ -47,7 +49,7 @@ export default function CourseList({
             <th>Tên môn học</th>
             <th>Số tín chỉ</th>
             <th>Số chỗ còn lại</th>
-            <th>Thao tác</th>
+            {showActions && <th>Thao tác</th>}
           </tr>
         </thead>
         <tbody>
@@ -58,10 +60,10 @@ export default function CourseList({
               <td className={course.soChoConLai === 0 ? 'full' : undefined}>
                 {course.soChoConLai} / {course.soChoToiDa}
               </td>
-              <td className="row-actions">
-                <button type="button" disabled={busy} onClick={() => onEdit(course)}>Sửa</button>
-                <button className="danger" type="button" disabled={busy} onClick={() => onDelete(course)}>Xóa</button>
-              </td>
+              {showActions && <td className="row-actions">
+                {onEdit && <button type="button" disabled={busy} onClick={() => onEdit(course)}>Sửa</button>}
+                {onDelete && <button className="danger" type="button" disabled={busy} onClick={() => onDelete(course)}>Xóa</button>}
+              </td>}
             </tr>
           ))}
         </tbody>

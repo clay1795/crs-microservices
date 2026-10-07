@@ -7,6 +7,17 @@
   text-rendering: optimizeLegibility;
 }
 
+.navbar { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; padding: 16px 24px; border-bottom: 1px solid #dce4ef; background: #fff; font-size: .875rem; }
+.navbar a { color: #475467; text-decoration: none; }
+.navbar a.active { color: #3156a3; font-weight: 700; }
+.navbar .brand { font-size: 1.125rem; font-weight: 800; letter-spacing: .04em; }
+.nav-account { margin-left: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.login-page { max-width: 460px; }
+.login-page h1 { font-size: 2rem; }
+.login-page fieldset { border: 0; padding: 0; margin: 24px 0 0; min-width: 0; }
+.login-page label { display: grid; gap: 8px; margin-bottom: 18px; font-size: .875rem; font-weight: 600; }
+.login-page button { width: 100%; margin-top: 12px; }
+
 * {
   box-sizing: border-box;
 }

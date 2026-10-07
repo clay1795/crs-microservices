@@ -13,4 +13,16 @@ axiosClient.interceptors.request.use((config) => {
   return config
 })
 
+axiosClient.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      localStorage.removeItem('crs_token')
+      localStorage.removeItem('crs_user')
+      if (window.location.pathname !== '/login') window.location.replace('/login')
+    }
+    return Promise.reject(error)
+  },
+)
+
 export default axiosClient
