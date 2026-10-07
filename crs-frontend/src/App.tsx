@@ -1,34 +1,42 @@
-import { useEffect, useState } from 'react'
-import { getCourses } from './api/courseApi'
-import type { Course } from './types/course'
+import { useCallback, useState } from 'react'
+import { useCourses } from './api/useCourses'
+import CourseList from './components/CourseList'
+import Pagination from './components/Pagination'
+import SearchBox from './components/SearchBox'
 
 function App() {
-  const [courses, setCourses] = useState<Course[]>([])
-  const [error, setError] = useState<string | null>(null)
+  const [keyword, setKeyword] = useState('')
+  const [page, setPage] = useState(0)
+  const { courses, totalPages, state, errorMessage, refetch } = useCourses(
+    keyword,
+    page,
+  )
 
-  useEffect(() => {
-    getCourses()
-      .then((response) => setCourses(response.data.content))
-      .catch((requestError: unknown) => {
-        console.error(requestError)
-        setError(
-          'Không kết nối được tới hệ thống. Kiểm tra lại API Gateway đã chạy chưa.',
-        )
-      })
+  const handleSearch = useCallback((newKeyword: string) => {
+    setKeyword(newKeyword)
+    setPage(0)
   }, [])
 
   return (
     <main>
-      <h1>Kiểm tra kết nối CRS qua Gateway</h1>
-      <p className="endpoint">GET /api/courses</p>
-      {error ? (
-        <p className="error">{error}</p>
-      ) : (
-        <>
-          <p className="success">Kết nối thành công - {courses.length} môn học</p>
-          <pre>{JSON.stringify(courses, null, 2)}</pre>
-        </>
-      )}
+      <header>
+        <p className="eyebrow">CRS · Course Registration System</p>
+        <h1>Danh sách môn học</h1>
+        <p className="subtitle">Tìm kiếm và xem tình trạng chỗ học hiện tại.</p>
+      </header>
+
+      <SearchBox onSearch={handleSearch} />
+      <CourseList
+        courses={courses}
+        state={state}
+        errorMessage={errorMessage}
+        onRetry={refetch}
+      />
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </main>
   )
 }
