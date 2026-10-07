@@ -162,6 +162,10 @@ button.primary { color: #fff; background: #3156a3; border-color: #3156a3; }
 .row-actions button + button { margin-left: 8px; }
 button.danger { color: #b42318; }
 .success { color: #087443; font-weight: 600; }
+.toast { position: fixed; bottom: 24px; right: 24px; display: flex; align-items: center; gap: 16px; max-width: min(480px, calc(100vw - 32px)); padding: 14px 18px; border-radius: 8px; color: #fff; box-shadow: 0 4px 20px rgba(0, 0, 0, .16); z-index: 1000; }
+.toast-success { background: #15803d; }
+.toast-error { background: #b91c1c; }
+.toast button { flex-shrink: 0; padding: 0 4px; border: 0; color: #fff; background: transparent; font-size: 1.5rem; }
 
 @media (max-width: 600px) {
   .form-fields { grid-template-columns: 1fr; }

@@ -9,6 +9,8 @@ interface CourseListProps {
   onEdit?: (course: Course) => void
   onDelete?: (course: Course) => void
   busy?: boolean
+  onRegister?: (course: Course) => void
+  registeringId?: number | null
 }
 
 export default function CourseList({
@@ -19,6 +21,8 @@ export default function CourseList({
   onEdit,
   onDelete,
   busy = false,
+  onRegister,
+  registeringId = null,
 }: CourseListProps) {
   if (state === 'loading') {
     return <p className="status">Đang tải danh sách môn học...</p>
@@ -39,7 +43,7 @@ export default function CourseList({
     return <p className="status">Không tìm thấy môn học nào phù hợp.</p>
   }
 
-  const showActions = !!onEdit || !!onDelete
+  const showActions = !!onEdit || !!onDelete || !!onRegister
 
   return (
     <div className="table-wrapper">
@@ -63,6 +67,11 @@ export default function CourseList({
               {showActions && <td className="row-actions">
                 {onEdit && <button type="button" disabled={busy} onClick={() => onEdit(course)}>Sửa</button>}
                 {onDelete && <button className="danger" type="button" disabled={busy} onClick={() => onDelete(course)}>Xóa</button>}
+                {onRegister && <button type="button"
+                  disabled={course.soChoConLai <= 0 || registeringId !== null}
+                  onClick={() => onRegister(course)}>
+                  {registeringId === course.id ? 'Đang đăng ký...' : course.soChoConLai <= 0 ? 'Hết chỗ' : 'Đăng ký'}
+                </button>}
               </td>}
             </tr>
           ))}

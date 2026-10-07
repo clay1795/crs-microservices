@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage'
 import CoursesPage from './pages/CoursesPage'
 import AdminCoursesPage from './pages/AdminCoursesPage'
 import RegisterCoursePage from './pages/RegisterCoursePage'
+import MyRegistrationsPage from './pages/MyRegistrationsPage'
 
 export default function App() {
   return (
@@ -21,6 +22,9 @@ export default function App() {
           } />
           <Route path="/register-course" element={
             <ProtectedRoute requiredRole="STUDENT"><RegisterCoursePage /></ProtectedRoute>
+          } />
+          <Route path="/my-registrations" element={
+            <ProtectedRoute requiredRole="STUDENT"><MyRegistrationsPage /></ProtectedRoute>
           } />
           <Route path="*" element={<Navigate to="/courses" replace />} />
         </Routes>

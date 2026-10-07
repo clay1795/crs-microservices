@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { LoginResponse } from '../types/auth'
 
-type AuthUser = Pick<LoginResponse, 'username' | 'role'>
+type AuthUser = Pick<LoginResponse, 'username' | 'role'> & { id: number }
 
 interface AuthContextValue {
   user: AuthUser | null
@@ -19,9 +19,10 @@ function restoreUser(): AuthUser | null {
     const savedUser = localStorage.getItem('crs_user')
     if (token && savedUser) {
       const user: unknown = JSON.parse(savedUser)
-      if (typeof user === 'object' && user !== null && 'username' in user && 'role' in user
+      if (typeof user === 'object' && user !== null && 'username' in user && 'role' in user && 'id' in user
+        && typeof user.id === 'number' && Number.isSafeInteger(user.id) && user.id > 0
         && typeof user.username === 'string' && (user.role === 'ADMIN' || user.role === 'STUDENT')) {
-        return { username: user.username, role: user.role }
+        return { id: user.id, username: user.username, role: user.role }
       }
     }
   } catch {
@@ -36,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(restoreUser)
 
   const login = (data: LoginResponse) => {
-    const authUser = { username: data.username, role: data.role }
+    const authUser = { id: data.userId, username: data.username, role: data.role }
     localStorage.setItem('crs_token', data.token)
     localStorage.setItem('crs_user', JSON.stringify(authUser))
     setUser(authUser)

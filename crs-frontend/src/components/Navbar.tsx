@@ -10,7 +10,10 @@ export default function Navbar() {
       <NavLink className="brand" to="/courses">CRS</NavLink>
       <NavLink to="/courses">Danh sách môn học</NavLink>
       {user?.role === 'ADMIN' && <NavLink to="/admin/courses">Quản trị môn học</NavLink>}
-      {user?.role === 'STUDENT' && <NavLink to="/register-course">Đăng ký học phần</NavLink>}
+      {user?.role === 'STUDENT' && <>
+        <NavLink to="/register-course">Đăng ký học phần</NavLink>
+        <NavLink to="/my-registrations">Môn học đã đăng ký</NavLink>
+      </>}
       <div className="nav-account">
         {user ? <>
           <span>Xin chào, {user.username} ({user.role})</span>
