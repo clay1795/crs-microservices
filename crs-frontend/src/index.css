@@ -139,7 +139,21 @@ button:disabled {
   margin-top: 20px;
 }
 
+.course-form { margin-top: 28px; padding: 20px; border: 1px solid #dce4ef; border-radius: 10px; }
+.course-form h2 { margin: 0 0 16px; font-size: 1.125rem; }
+.course-form fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+.form-fields { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; }
+.form-fields label { display: grid; align-content: start; gap: 8px; font-size: .875rem; font-weight: 600; }
+.form-fields .error { font-size: .8125rem; }
+.form-actions { display: flex; gap: 8px; margin-top: 16px; }
+button.primary { color: #fff; background: #3156a3; border-color: #3156a3; }
+.row-actions { white-space: nowrap; }
+.row-actions button + button { margin-left: 8px; }
+button.danger { color: #b42318; }
+.success { color: #087443; font-weight: 600; }
+
 @media (max-width: 600px) {
+  .form-fields { grid-template-columns: 1fr; }
   main {
     margin: 16px auto;
     padding: 20px;

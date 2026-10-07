@@ -6,6 +6,9 @@ interface CourseListProps {
   state: LoadState
   errorMessage: string
   onRetry: () => void
+  onEdit: (course: Course) => void
+  onDelete: (course: Course) => void
+  busy: boolean
 }
 
 export default function CourseList({
@@ -13,6 +16,9 @@ export default function CourseList({
   state,
   errorMessage,
   onRetry,
+  onEdit,
+  onDelete,
+  busy,
 }: CourseListProps) {
   if (state === 'loading') {
     return <p className="status">Đang tải danh sách môn học...</p>
@@ -41,6 +47,7 @@ export default function CourseList({
             <th>Tên môn học</th>
             <th>Số tín chỉ</th>
             <th>Số chỗ còn lại</th>
+            <th>Thao tác</th>
           </tr>
         </thead>
         <tbody>
@@ -50,6 +57,10 @@ export default function CourseList({
               <td>{course.soTinChi}</td>
               <td className={course.soChoConLai === 0 ? 'full' : undefined}>
                 {course.soChoConLai} / {course.soChoToiDa}
+              </td>
+              <td className="row-actions">
+                <button type="button" disabled={busy} onClick={() => onEdit(course)}>Sửa</button>
+                <button className="danger" type="button" disabled={busy} onClick={() => onDelete(course)}>Xóa</button>
               </td>
             </tr>
           ))}
